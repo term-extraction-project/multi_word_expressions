@@ -1,4 +1,4 @@
-# Term Extraction Project
+# Phrase Extraction Project
 
 A Python package for extracting phrases from text.
 
