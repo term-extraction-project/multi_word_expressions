@@ -10,6 +10,8 @@ from spacy.lang.char_classes import ALPHA, ALPHA_LOWER, ALPHA_UPPER
 from spacy.lang.char_classes import CONCAT_QUOTES, LIST_ELLIPSES, LIST_ICONS
 from spacy.util import compile_infix_regex
 from operator import itemgetter
+import pandas as pd
+
 
 nlp = spacy.load("en_core_web_sm")
 punc = list(string.punctuation)
