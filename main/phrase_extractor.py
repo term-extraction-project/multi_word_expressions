@@ -250,7 +250,7 @@ def group_items(lst):
 
     return lst
 
-class PhraseExtractor_5:
+class PhraseExtractor:
     def __init__(self, text, cohision_filter=True, additional_text=None, f_raw_sc=10, f_req_sc=5):
         self.text = text
         self.cohision_filter=cohision_filter
