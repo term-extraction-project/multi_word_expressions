@@ -334,8 +334,8 @@ class PhraseExtractor:
                       df_temp=df_temp[~df_temp.index.isin(drop+index)]
                       remover+=dd
 
-            data1=df[df["f req"]>self.f_req_sc].values.tolist()
-            data2=df[df["f raw"]>self.f_raw_sc].values.tolist()
+            data1=df[df["f req"]>=self.f_req_sc].values.tolist()
+            data2=df[df["f raw"]>=self.f_raw_sc].values.tolist()
 
             cand_mwe=[concatenate_ngrams(i[0]) for i in candidates+candid_q]
             cand_mwe1=[concatenate_ngrams(i[0]) for i in data1]
