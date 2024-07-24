@@ -254,7 +254,7 @@ def group_items(lst):
     return lst
 
 class PhraseExtractor:
-    def __init__(self, text, cohision_filter=True, additional_text=None, f_raw_sc=10, f_req_sc=5):
+    def __init__(self, text, cohision_filter=True, additional_text="1", f_raw_sc=10, f_req_sc=5):
         self.text = text
         self.cohision_filter=cohision_filter
         self.additional_text=additional_text
@@ -284,7 +284,7 @@ class PhraseExtractor:
         
         #text for cohision filter and calculate frequency
         all_txt=''
-        if len(self.additional_text)>0:
+        if len(self.additional_text)>10:
              text_ref=self.additional_text.replace(" -","-").replace("- ","-").replace(" '","'").replace("  "," ").lower()
              all_txt=self.text+". "+text_ref
         else:
