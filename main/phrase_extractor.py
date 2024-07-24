@@ -13,6 +13,9 @@ from operator import itemgetter
 
 nlp = spacy.load("en_core_web_sm")
 punc = list(string.punctuation)
+punc.remove('-')
+punc.remove("'")
+punc2=list(string.punctuation)
 
 def fetch_text_from_url(url):
     response = requests.get(url)
