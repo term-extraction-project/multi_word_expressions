@@ -18,7 +18,11 @@ Here is an example of how to use the PhraseExtractor class from the package:
 from main import PhraseExtractor
 # Your input text
 text = "Your input text here."
-extractor = PhraseExtractor(text)
+extractor = PhraseExtractor(text=text,
+                            cohision_filter=True, 
+                            additional_text=text_r, 
+                            f_raw_sc=9, 
+                            f_req_sc=3) 
 candidates = extractor.extract_phrases()
 print(candidates)
 ```
