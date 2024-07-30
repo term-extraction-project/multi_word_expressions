@@ -216,7 +216,7 @@ def group_items(lst):
     return lst
 
 class PhraseExtractor:
-    def __init__(self, text, model_nlp=spacy.load("en_core_web_sm"), stop_words=stop_words,  cohision_filter=True, additional_text="1", f_raw_sc=9, f_req_sc=3):
+    def __init__(self, text, model_nlp=spacy.load("en_core_web_sm"), stop_words=stop_words, list_seq=list_seq_2  cohision_filter=True, additional_text="1", f_raw_sc=9, f_req_sc=3):
         self.text = text
         self.cohision_filter=cohision_filter
         self.additional_text=additional_text
@@ -224,6 +224,7 @@ class PhraseExtractor:
         self.f_raw_sc=f_raw_sc
         self.stop_words=stop_words
         self.model_nlp=model_nlp
+        self.list_seq=list_seq
 
     def extract_phrases(self):
        
@@ -255,7 +256,7 @@ class PhraseExtractor:
         text_sent_tokens = tokinizer(text, nlp)
         mwe_list = []
         for sent in text_sent_tokens:
-            temp_mwe_list = filter_ngrams_by_pos_tag(sent, list_seq_2)
+            temp_mwe_list = filter_ngrams_by_pos_tag(sent, self.list_seq)
             temp_mwe_list = filter_propn_noun(temp_mwe_list,nlp)
             temp_mwe_list = filter_stop_words(temp_mwe_list, self.stop_words)
             mwe_list += temp_mwe_list
