@@ -216,7 +216,7 @@ def group_items(lst):
     return lst
 
 class PhraseExtractor:
-    def __init__(self, text, model_nlp="en_core_web_sm", stop_words=stop_words,  cohision_filter=True, additional_text="1", f_raw_sc=9, f_req_sc=3):
+    def __init__(self, text, model_nlp=spacy.load("nl_core_news_sm"), stop_words=stop_words,  cohision_filter=True, additional_text="1", f_raw_sc=9, f_req_sc=3):
         self.text = text
         self.cohision_filter=cohision_filter
         self.additional_text=additional_text
@@ -226,7 +226,8 @@ class PhraseExtractor:
         self.model_nlp=model_nlp
 
     def extract_phrases(self):
-        nlp = spacy.load(self.model_nlp)
+       
+        nlp = self.model_nlp
         
         # Modify tokenizer infix patterns
         infixes = (
