@@ -64,7 +64,7 @@ list_seq_2=  [[["PROPN","NOUN"],"*"],
               ]
 
 
-def filter_propn_noun(mwe_list):
+def filter_propn_noun(mwe_list,nlp):
     filtred_ngrams=[]
     for i in mwe_list:
       checker2=True
@@ -255,7 +255,7 @@ class PhraseExtractor:
         mwe_list = []
         for sent in text_sent_tokens:
             temp_mwe_list = filter_ngrams_by_pos_tag(sent, list_seq_2)
-            temp_mwe_list = filter_propn_noun(temp_mwe_list)
+            temp_mwe_list = filter_propn_noun(temp_mwe_list,nlp)
             temp_mwe_list = filter_stop_words(temp_mwe_list, self.stop_words)
             mwe_list += temp_mwe_list
         
