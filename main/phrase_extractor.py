@@ -22,7 +22,7 @@ url = 'https://raw.githubusercontent.com/term-extraction-project/stop_words/main
 stop_words = (requests.get(url).text).split(",")
 
 
-def tokinizer(text):
+def tokinizer(text, nlp):
   sent_tokens = []
   index=0
   text_t=nlp(text)
@@ -251,7 +251,7 @@ class PhraseExtractor:
 
         #extract by pos tag pattern
         text=self.text.replace(" -","-").replace("- ","-").replace(" '","'").replace("  "," ").lower()
-        text_sent_tokens = tokinizer(text)
+        text_sent_tokens = tokinizer(text, nlp)
         mwe_list = []
         for sent in text_sent_tokens:
             temp_mwe_list = filter_ngrams_by_pos_tag(sent, list_seq_2)
