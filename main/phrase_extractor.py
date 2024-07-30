@@ -18,7 +18,7 @@ punc.remove("'")
 punc2=list(string.punctuation)
 
 
-url = 'https://raw.githubusercontent.com/term-extraction-project/stop_words/main/stop_words.txt'
+url = 'https://raw.githubusercontent.com/term-extraction-project/stop_words/main/stop_words_en.txt'
 stop_words = (requests.get(url).text).split(",")
 
 
