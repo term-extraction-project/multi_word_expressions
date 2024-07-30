@@ -3,7 +3,6 @@ from nltk.util import ngrams
 nltk.download("punkt")
 import string
 import spacy
-from sklearn.feature_extraction.text import ENGLISH_STOP_WORDS
 import requests
 
 from spacy.lang.char_classes import ALPHA, ALPHA_LOWER, ALPHA_UPPER
@@ -13,54 +12,15 @@ from operator import itemgetter
 import pandas as pd
 
 
-nlp = spacy.load("en_core_web_sm")
 punc = list(string.punctuation)
 punc.remove('-')
 punc.remove("'")
 punc2=list(string.punctuation)
 
-def fetch_text_from_url(url):
-    response = requests.get(url)
-    if response.status_code == 200:
-        return (response.text).split(",")
 
-url = 'https://gist.githubusercontent.com/ZohebAbai/513218c3468130eacff6481f424e4e64/raw/b70776f341a148293ff277afa0d0302c8c38f7e2/gist_stopwords.txt'
-stopwords = fetch_text_from_url(url)
+url = 'https://raw.githubusercontent.com/term-extraction-project/stop_words/main/stop_words.txt'
+stop_words = (requests.get(url).text).split(",")
 
-add_stop = ['said', 'say', '...', 'like', 'cnn', 'ad', 'etc', 'aforementioned', 'accordance', 'according', 'do', 'did', 'does', 'done', 'possible',
-           'consider', 'concern', 'concerning', 'conсerned', 'regard', 'regarding', 'regards', 'have', 'has', 'had', 'having', 'refer', 'referred', 'shall'] # away too much almost other actually other скачать с сайта по in hanced stop word list
-
-stop_words = ENGLISH_STOP_WORDS.union(add_stop)
-stop_words = stop_words.union(stopwords)
-except_w=['across',"acute","dyspnea" 'act', 'amount', 'announce', 'arise', 'begin', 'beginning', 'beginnings', 'begins', 'believe', 'bill', 'bottom', 'brief', 'call', 'changes', 'course',
-          'date', 'detail', 'down', 'effect', 'eight', 'eighty', 'eleven', 'empty', 'end', 'ending', 'fifteen', 'fifth', 'fill', 'fire', 'first', 'five', 'fix', 'forth',
-          'forty', 'four', 'front', 'full', 'help', 'home', 'hundred', 'index', 'information', 'inner', 'interest', 'invention', 'left', 'line', 'little', 'made', 'make',
-          'makes', 'mill', 'mug', 'name', 'new', 'nine', 'ninety', 'non', 'novel', 'off', 'old', 'on', 'one', 'outside', 'over', 'owing', 'own', 'page', 'pagecount', 'pages',
-          'part', 'past', 'placed', 'plus', 'research', 'research-articl', 'results', 'right', 'second', 'section', 'self', 'sent', 'seven', 'side', 'six', 'sixty', 'stop',
-          'system', 'thin', 'think', 'third', 'thousand', 'three', 'tip', 'twelve', 'twenty', 'twice', 'two', 'use', 'value', 'way', 'words', 'world', 'zero']
-
-stop_words=stop_words-set(except_w)
-
-
-
-# Modify tokenizer infix patterns
-infixes = (
-    LIST_ELLIPSES
-    + LIST_ICONS
-    + [
-        r"(?<=[0-9])[+\\-\\*^](?=[0-9-])",
-        r"(?<=[{al}{q}])\\.(?=[{au}{q}])".format(
-            al=ALPHA_LOWER, au=ALPHA_UPPER, q=CONCAT_QUOTES
-        ),
-        r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
-        # Commented out regex that splits on hyphens between letters:
-        # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS),
-        r"(?<=[{a}0-9])[:<>=/](?=[{a}])".format(a=ALPHA),
-    ]
-)
-
-infix_re = compile_infix_regex(infixes)
-nlp.tokenizer.infix_finditer = infix_re.finditer
 
 def tokinizer(text):
   sent_tokens = []
@@ -122,7 +82,7 @@ def filter_propn_noun(mwe_list):
         filtred_ngrams.append(i)
     return filtred_ngrams
 
-def filter_stop_words(mwe_list):
+def filter_stop_words(mwe_list, stop_words):
     filtred_ngrams=[]
     for mwe in mwe_list:
       checker3=True
@@ -256,14 +216,39 @@ def group_items(lst):
     return lst
 
 class PhraseExtractor:
-    def __init__(self, text, cohision_filter=True, additional_text="1", f_raw_sc=10, f_req_sc=5):
+    def __init__(self, text, model_nlp="en_core_web_sm", stop_words=stop_words,  cohision_filter=True, additional_text="1", f_raw_sc=9, f_req_sc=3):
         self.text = text
         self.cohision_filter=cohision_filter
         self.additional_text=additional_text
         self.f_req_sc=f_req_sc
         self.f_raw_sc=f_raw_sc
+        self.stop_words=stop_words
+        self.model_nlp=model_nlp
 
     def extract_phrases(self):
+        nlp = spacy.load(self.model_nlp)
+        
+        # Modify tokenizer infix patterns
+        infixes = (
+            LIST_ELLIPSES
+            + LIST_ICONS
+            + [
+                r"(?<=[0-9])[+\\-\\*^](?=[0-9-])",
+                r"(?<=[{al}{q}])\\.(?=[{au}{q}])".format(
+                    al=ALPHA_LOWER, au=ALPHA_UPPER, q=CONCAT_QUOTES
+                ),
+                r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
+                # Commented out regex that splits on hyphens between letters:
+                # r"(?<=[{a}])(?:{h})(?=[{a}])".format(a=ALPHA, h=HYPHENS),
+                r"(?<=[{a}0-9])[:<>=/](?=[{a}])".format(a=ALPHA),
+            ]
+        )
+
+        infix_re = compile_infix_regex(infixes)
+        nlp.tokenizer.infix_finditer = infix_re.finditer
+
+
+
         #extract by pos tag pattern
         text=self.text.replace(" -","-").replace("- ","-").replace(" '","'").replace("  "," ").lower()
         text_sent_tokens = tokinizer(text)
@@ -271,7 +256,7 @@ class PhraseExtractor:
         for sent in text_sent_tokens:
             temp_mwe_list = filter_ngrams_by_pos_tag(sent, list_seq_2)
             temp_mwe_list = filter_propn_noun(temp_mwe_list)
-            temp_mwe_list = filter_stop_words(temp_mwe_list)
+            temp_mwe_list = filter_stop_words(temp_mwe_list, self.stop_words)
             mwe_list += temp_mwe_list
         
         mwe_list_n = [tuple(i[0]) for i in mwe_list]
