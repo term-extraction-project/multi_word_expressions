@@ -55,6 +55,7 @@ class PhraseExtractor:
                 f_req_sc=self.f_req_sc
             )
         elif lang == "kk":
+            !pip install stanza
             stop_words = stop_words if stop_words is not None else KK_STOP_WORDS
             list_seq = list_seq if list_seq is not None else KK_POS_PATTERNS
             self.extractor = KazakhPhraseExtractor(
