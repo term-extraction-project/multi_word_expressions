@@ -1,5 +1,5 @@
-from multi_word_expressions.english import EnglishPhraseExtractor, DEFAULT_STOP_WORDS as EN_STOP_WORDS, DEFAULT_POS_PATTERNS as EN_POS_PATTERNS
-from multi_word_expressions.kazakh import KazakhPhraseExtractor, DEFAULT_STOP_WORDS as KK_STOP_WORDS, DEFAULT_POS_PATTERNS as KK_POS_PATTERNS
+from multi_word_expressions.english import EnglishPhraseExtractor
+from multi_word_expressions.kazakh import KazakhPhraseExtractor
 
 KK_STOP_WORDS =['басқалай', 'сенің', 'бірнеше', 'қазіргі', 'егерде', 'соншалықты', 'жылдардың', 'осы', 'неше', 'себебі', 'секілді', 'осылайша', 'бірақ та', 'қайда', 'кездесі', 'ешқандай', 'қашан', 'жоғары', 'өте', 'бірде', 'өз', 'де',
             'анау', 'сияқты', 'біреу', 'қалай', 'қайталай', 'егер', 'мынау', 'олар', 'арасында', 'сен', 'ешқашан', 'бірдеңе', 'не', 'оң', 'тағы да', 'бар', 'дегенмен', 'ешкім', 'қайта', 'алайда', 'қазір', 'да', 'барлық', 'әркім',
