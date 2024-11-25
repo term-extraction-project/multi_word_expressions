@@ -41,6 +41,8 @@ class PhraseExtractor:
         self.additional_text = additional_text
         self.f_raw_sc = f_raw_sc
         self.f_req_sc = f_req_sc
+        self.stop_words=stop_words
+        self.list_seq=list_seq
 
         if lang == "en":
             stop_words = stop_words if stop_words is not None else EN_STOP_WORDS
