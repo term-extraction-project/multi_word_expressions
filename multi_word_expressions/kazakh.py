@@ -7,7 +7,6 @@ from operator import itemgetter
 import pandas as pd
 import string
 
-pip install stanza
 import stanza
 stanza.download('kk')
 nlp = stanza.Pipeline('kk')
