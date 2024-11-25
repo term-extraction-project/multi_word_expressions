@@ -1,5 +1,6 @@
 from multi_word_expressions.english import EnglishPhraseExtractor
 from multi_word_expressions.kazakh import KazakhPhraseExtractor
+!pip install stanza
 
 KK_POS_PATTERNS=  [[["PROPN","NOUN"],"*"],
               ["ADJ",'*', ["PROPN","NOUN"], '*']]
