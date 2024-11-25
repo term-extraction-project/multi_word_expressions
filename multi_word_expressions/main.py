@@ -45,8 +45,8 @@ class PhraseExtractor:
         self.list_seq=list_seq
 
         if lang == "en":
-            stop_words = stop_words if stop_words is not None else EN_STOP_WORDS
-            list_seq = list_seq if list_seq is not None else EN_POS_PATTERNS
+            stop_words =  self.stop_words if  self.stop_words is not None else EN_STOP_WORDS
+            list_seq = self.list_seq if self.list_seq is not None else EN_POS_PATTERNS
             self.extractor = EnglishPhraseExtractor(
                 text=self.text,
                 stop_words=stop_words,
@@ -58,8 +58,8 @@ class PhraseExtractor:
             )
         elif lang == "kk":
            
-            stop_words = stop_words if stop_words is not None else KK_STOP_WORDS
-            list_seq = list_seq if list_seq is not None else KK_POS_PATTERNS
+            stop_words =  self.stop_words if  self.stop_words is not None else KK_STOP_WORDS
+            list_seq = self.list_seq if self.list_seq is not None else KK_POS_PATTERNS
             self.extractor = KazakhPhraseExtractor(
                 text=self.text,
                 stop_words=stop_words,
