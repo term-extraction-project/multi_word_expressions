@@ -1,3 +1,3 @@
-from .phrase_extractor import PhraseExtractor
+from .main import PhraseExtractor
 
-__all__ = ['PhraseExtractor']
+__all__ = ["PhraseExtractor"]
