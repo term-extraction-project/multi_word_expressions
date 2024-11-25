@@ -1,6 +1,37 @@
 from multi_word_expressions.english import EnglishPhraseExtractor, DEFAULT_STOP_WORDS as EN_STOP_WORDS, DEFAULT_POS_PATTERNS as EN_POS_PATTERNS
 from multi_word_expressions.kazakh import KazakhPhraseExtractor, DEFAULT_STOP_WORDS as KK_STOP_WORDS, DEFAULT_POS_PATTERNS as KK_POS_PATTERNS
 
+KK_STOP_WORDS =['басқалай', 'сенің', 'бірнеше', 'қазіргі', 'егерде', 'соншалықты', 'жылдардың', 'осы', 'неше', 'себебі', 'секілді', 'осылайша', 'бірақ та', 'қайда', 'кездесі', 'ешқандай', 'қашан', 'жоғары', 'өте', 'бірде', 'өз', 'де',
+            'анау', 'сияқты', 'біреу', 'қалай', 'қайталай', 'егер', 'мынау', 'олар', 'арасында', 'сен', 'ешқашан', 'бірдеңе', 'не', 'оң', 'тағы да', 'бар', 'дегенмен', 'ешкім', 'қайта', 'алайда', 'қазір', 'да', 'барлық', 'әркім',
+            'бәрі', 'байлынысты', 'жоқ', 'жиі', 'сондықтан да', 'біз', 'кейін', 'сол', 'соңғы', 'мүмкін', 'олай болса', 'айналасында', 'төмен', 'ішінде', 'болуы мүмкін', 'қаншалықты', 'бәрібір', 'соңында', 'дейін', 'сіз', 'осында',
+            'туралы', 'олардікі', 'әрдайым', 'қандай', 'қалайша', 'мен', 'бірге', 'осылай', 'оның', 'ал', 'болатын', 'әр', 'және', 'алыс', 'әрі', 'кез-келген', 'сондықтан', 'кейбіреулер', 'бұрын', 'неге', 'кейінірек', 'арнайы', 'басқа',
+            'байланысты', 'ертең', 'ғана', 'кеше', 'сіздің', 'сонда', 'кім', 'тек', 'әлдеқайда', 'жылы', 'тамаша', 'сирек', 'барлығы', 'бірақ', 'кезде', 'бастап', 'бұл', 'қай жерде', 'кезінде', 'үшін', 'ол', 'болып табылады', 'сондай',
+            'біздің', 'мұнда', 'менің', 'кейде', 'арқылы', 'болды', 'тағы', 'жылдың', 'сыртында', 'әрқашан', 'жақын', 'олардың', 'онда', 'сондай-ақ', 'қанша', 'біздікі', 'бәріміз', 'бүгін', 'ештеңе', 'көптеген']
+
+KK_POS_PATTERNS=  [[["PROPN","NOUN"],"*"],
+              ["ADJ",'*', ["PROPN","NOUN"], '*']]
+
+import requests
+
+url = 'https://raw.githubusercontent.com/term-extraction-project/stop_words/main/stop_words_en.txt'
+EN_STOP_WORDS = (requests.get(url).text).split(",")
+
+EN_POS_PATTERNS=  [[["PROPN","NOUN"],"*"],
+                     ["ADJ",'*', ["PROPN","NOUN"], '*'],
+                     ["ADJ","*"],
+                     ['VERB', 'ADJ', ["PROPN","NOUN"],'*'],
+                     [["PROPN","NOUN"],'*','ADJ','*',["PROPN","NOUN"],'*'],
+                     ['ADJ','VERB',["PROPN","NOUN"], '*'],
+                     ['VERB','*',["PROPN","NOUN"],'*'],
+                     [["PROPN","NOUN"], '*','ADJ','*',["PROPN","NOUN"], '*'],
+                     ["ADV","*","ADJ","*"],
+                     [["PROPN","NOUN"],'ADP',["PROPN","NOUN"]],
+                     [["ADJ","PROPN","NOUN"],"*","PART",["PROPN","NOUN"],"*"],
+                     [['VERB',"ADV","X"]],
+                     [["ADJ","PROPN","NOUN"],"*", "ADP",["PROPN","NOUN"],"*"]
+                      ]
+
+
 class PhraseExtractor:
     def __init__(self, text, lang="en", stop_words=None, list_seq=None, cohision_filter=True, additional_text="1", f_raw_sc=9, f_req_sc=3):
 
