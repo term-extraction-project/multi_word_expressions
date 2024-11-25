@@ -17,6 +17,7 @@ punc_without.remove('-')
 punc_without.remove("'")
 punc_all=list(string.punctuation)+["»","«"]
 
+
 list_seq_2=  [[["PROPN","NOUN"],"*"],
               ["ADJ",'*', ["PROPN","NOUN"], '*']]
 
@@ -53,7 +54,7 @@ def filter_ngrams_by_pos_tag(sentence, sequense):
             temp_lemma=[]
             checker=True
 
-            if ((sentence[i][1] in seq[0]) or (sentence[i][1] == seq[0])) and (sentence[i][0] not in punc) :
+            if ((sentence[i][1] in seq[0]) or (sentence[i][1] == seq[0])) and (sentence[i][0] not in punc_without) :
                seq_index=0
                sent_index=0
 
@@ -75,12 +76,12 @@ def filter_ngrams_by_pos_tag(sentence, sequense):
                               sent_index += 1
 
                        elif seq_index==len(seq)-1:
-                             if (len(temp)>1  or "-" in "".join(temp)) and (len(set("".join(temp)).intersection(set(punc)-set("-'")))==0):
+                             if (len(temp)>1  or "-" in "".join(temp)) and (len(set("".join(temp)).intersection(set(punc_without)-set("-'")))==0):
                                  temp_2=temp.copy()
                                  temp_pos2=temp_pos.copy()
                                  temp_index2=temp_index.copy()
                                  temp_lemma2=temp_lemma.copy()
-                                 if [temp_2, seq, temp_pos2, temp_index2,len(temp_2), len(concatenate_ngrams(temp_2)), temp_lemma2] not in filtered_ngrams and temp[-1] not in punc:
+                                 if [temp_2, seq, temp_pos2, temp_index2,len(temp_2), len(concatenate_ngrams(temp_2)), temp_lemma2] not in filtered_ngrams and temp[-1] not in punc_without:
                                      filtered_ngrams.append([temp_2, seq, temp_pos2, temp_index2,len(temp_2),len(concatenate_ngrams(temp_2)),temp_lemma2])
 
                              if (i+sent_index)<len(sentence):
@@ -96,8 +97,8 @@ def filter_ngrams_by_pos_tag(sentence, sequense):
                    else:
                       checker=False
       
-               if seq_index==len(seq) and (len(temp)>1  or "-" in "".join(temp)) and len(set("".join(temp)).intersection(set(punc)-set("-'")))==0:
-                    if [temp, seq, temp_pos, temp_index,len(temp),len(concatenate_ngrams(temp)),temp_lemma] not in filtered_ngrams and temp[-1] not in punc:
+               if seq_index==len(seq) and (len(temp)>1  or "-" in "".join(temp)) and len(set("".join(temp)).intersection(set(punc_without)-set("-'")))==0:
+                    if [temp, seq, temp_pos, temp_index,len(temp),len(concatenate_ngrams(temp)),temp_lemma] not in filtered_ngrams and temp[-1] not in punc_without:
                          filtered_ngrams.append([temp, seq, temp_pos, temp_index,len(temp),len(concatenate_ngrams(temp)),temp_lemma])
 
     return  filtered_ngrams
@@ -176,7 +177,7 @@ class KazakhPhraseExtractor:
         for i in set(mwe_list_n):
             candidates.append(concatenate_ngrams(i))
 
-        candidates = [i for i in candidates if ((i[-1] not in punc) and (i[-1] not in string.punctuation))]
+        candidates = [i for i in candidates if ((i[-1] not in punc_without) and (i[-1] not in string.punctuation))]
         candidates = [i for i in candidates if len(set('1234567890').intersection(set(i))) == 0]
 
         #text for cohision filter and calculate frequency
@@ -230,6 +231,6 @@ class KazakhPhraseExtractor:
             cand_mwe2=[concatenate_ngrams(i[0]) for i in data2]
 
             cand=cand_mwe+cand_mwe1+cand_mwe2
-            candidates = [i for i in cand if ((i[-1] not in punc) and (i[-1] not in string.punctuation))]
+            candidates = [i for i in cand if ((i[-1] not in punc_without) and (i[-1] not in string.punctuation))]
 
         return candidates
