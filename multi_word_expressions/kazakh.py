@@ -168,7 +168,7 @@ class KazakhPhraseExtractor:
         self.list_seq=list_seq
 
     def extract_phrases(self):  
-        sent=tokinizer()
+        sent=tokinizer(self.text)
         mwe_list = filter_ngrams_by_pos_tag(sent, self.list_seq)
 
         mwe_list_n = [tuple(i[0]) for i in mwe_list]
