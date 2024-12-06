@@ -8,6 +8,9 @@ You can install the package directly from GitHub using the following command:
 
 ```bash
 pip install git+https://github.com/term-extraction-project/multi_word_expressions.git
+
+from multi_word_expressions.english import EnglishPhraseExtractor
+from multi_word_expressions.kazakh import KazakhPhraseExtractor
 ```
 
 ### Usage
