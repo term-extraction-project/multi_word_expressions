@@ -200,10 +200,10 @@ class EnglishPhraseExtractor:
         self.f_raw_sc=f_raw_sc
         self.stop_words=stop_words
         self.list_seq=list_seq
+        self.nlp = spacy.load("en_core_web_sm")
 
     def extract_phrases(self):
 
-        nlp = spacy.load("en_core_web_sm")
         infixes = (
             LIST_ELLIPSES
             + LIST_ICONS
