@@ -191,7 +191,8 @@ def group_items(lst):
         lst[i].append(group_map[root])
 
     return lst
-nlp=spacy.load("en_core_web_sm")
+  
+
 class EnglishPhraseExtractor:
     def __init__(self, text, stop_words=stop_words, list_seq=pos_tag_patterns,  cohision_filter=True, additional_text="1", f_raw_sc=9, f_req_sc=3):
         self.text = text
@@ -201,11 +202,11 @@ class EnglishPhraseExtractor:
         self.f_raw_sc=f_raw_sc
         self.stop_words=stop_words
         self.list_seq=list_seq
-        self.nlp = nlp
+        self.model_nlp = spacy.load("en_core_web_sm")
 
     def extract_phrases(self):
-
-        nlp = self.nlp
+      
+        nlp = self.model_nlp
       
         infixes = (
             LIST_ELLIPSES
