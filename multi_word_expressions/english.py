@@ -13,7 +13,7 @@ import pandas as pd
 
 url = 'https://raw.githubusercontent.com/term-extraction-project/stop_words/main/stop_words_en.txt'
 stop_words = (requests.get(url).text).split(",")
-nlp = spacy.load("en_core_web_sm")
+
 
 pos_tag_patterns=  [[["PROPN","NOUN"],"*"],
                      ["ADJ",'*', ["PROPN","NOUN"], '*'],
@@ -191,7 +191,7 @@ def group_items(lst):
         lst[i].append(group_map[root])
 
     return lst
-
+nlp=spacy.load("en_core_web_sm")
 class EnglishPhraseExtractor:
     def __init__(self, text, stop_words=stop_words, list_seq=pos_tag_patterns,  cohision_filter=True, additional_text="1", f_raw_sc=9, f_req_sc=3):
         self.text = text
@@ -201,10 +201,11 @@ class EnglishPhraseExtractor:
         self.f_raw_sc=f_raw_sc
         self.stop_words=stop_words
         self.list_seq=list_seq
+        self.nlp = nlp
 
     def extract_phrases(self):
-      
-        
+
+        nlp = self.nlp
       
         infixes = (
             LIST_ELLIPSES
