@@ -14,7 +14,6 @@ import pandas as pd
 url = 'https://raw.githubusercontent.com/term-extraction-project/stop_words/main/stop_words_en.txt'
 stop_words = (requests.get(url).text).split(",")
 nlp = spacy.load("en_core_web_sm")
-model_nlp="en_core_web_sm"
 
 pos_tag_patterns=  [[["PROPN","NOUN"],"*"],
                      ["ADJ",'*', ["PROPN","NOUN"], '*'],
@@ -61,24 +60,6 @@ def concatenate_ngrams(candidate):
     temp=candidate
   temp = temp.lower()
   return str(temp)
-
-def filter_propn_noun(mwe_list,nlp):
-    filtred_ngrams=[]
-    for i in mwe_list:
-      checker2=True
-      if concatenate_ngrams(i[0])[-1] in punc_all and concatenate_ngrams(i[0])[0] in punc_all:
-         checker2=False
-
-      if len(i[2])>1:
-       if (("NOUN" in i[1][-1]) or ("PROPN" in i[1][-1]) or ("NOUN" in i[1][-2]) or ("PROPN" in i[1][-2])) and (("ADJ" not in i[1][-1]) and ("ADJ" not in i[1][-2])) :
-        temp_seq=str(concatenate_ngrams(i[0]))
-        temp_token=nlp(temp_seq)
-        if (temp_token[-1]).pos_ not in ["NOUN","PROPN","VERB"]:
-           checker2=False
-
-      if checker2==True:
-        filtred_ngrams.append(i)
-    return filtred_ngrams
 
 def filter_stop_words(mwe_list, stop_words):
     filtred_ngrams=[]
@@ -212,19 +193,18 @@ def group_items(lst):
     return lst
 
 class EnglishPhraseExtractor:
-    def __init__(self, text, model_nlp=spacy.load("en_core_web_sm"), stop_words=stop_words, list_seq=pos_tag_patterns,  cohision_filter=True, additional_text="1", f_raw_sc=9, f_req_sc=3):
+    def __init__(self, text, stop_words=stop_words, list_seq=pos_tag_patterns,  cohision_filter=True, additional_text="1", f_raw_sc=9, f_req_sc=3):
         self.text = text
         self.cohision_filter=cohision_filter
         self.additional_text=additional_text
         self.f_req_sc=f_req_sc
         self.f_raw_sc=f_raw_sc
         self.stop_words=stop_words
-        self.model_nlp=model_nlp
         self.list_seq=list_seq
 
     def extract_phrases(self):
 
-        nlp = self.model_nlp
+        nlp = nlp
         infixes = (
             LIST_ELLIPSES
             + LIST_ICONS
@@ -246,7 +226,6 @@ class EnglishPhraseExtractor:
 
         for sent in text_sent_tokens:
             temp_mwe_list = filter_ngrams_by_pos_tag(sent, self.list_seq)
-            temp_mwe_list = filter_propn_noun(temp_mwe_list,nlp)
             temp_mwe_list = filter_stop_words(temp_mwe_list, self.stop_words)
 
             sent_text=" ".join([s[0] for s in sent])
