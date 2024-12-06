@@ -1,3 +1,4 @@
-from .main import PhraseExtractor
+from .english import EnglishPhraseExtractor
+from .kazakh import KazakhPhraseExtractor
 
-__all__ = ["PhraseExtractor"]
+__all__ = ["EnglishPhraseExtractor", "KazakhPhraseExtractor"]
