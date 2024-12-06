@@ -7,6 +7,7 @@ from operator import itemgetter
 import pandas as pd
 import string
 
+!pip install stanza
 import stanza
 stanza.download('kk')
 nlp = stanza.Pipeline('kk')
@@ -19,6 +20,15 @@ punc_all=list(string.punctuation)+["»","«"]
 
 list_seq_2=  [[["PROPN","NOUN"],"*"],
               ["ADJ",'*', ["PROPN","NOUN"], '*']]
+
+
+stop_words=['басқалай', 'сенің', 'бірнеше', 'қазіргі', 'егерде', 'соншалықты', 'жылдардың', 'осы', 'неше', 'себебі', 'секілді', 'осылайша', 'бірақ та', 'қайда', 'кездесі', 'ешқандай', 'қашан', 'жоғары', 'өте', 'бірде', 'өз', 'де',
+            'анау', 'сияқты', 'біреу', 'қалай', 'қайталай', 'егер', 'мынау', 'олар', 'арасында', 'сен', 'ешқашан', 'бірдеңе', 'не', 'оң', 'тағы да', 'бар', 'дегенмен', 'ешкім', 'қайта', 'алайда', 'қазір', 'да', 'барлық', 'әркім',
+            'бәрі', 'байлынысты', 'жоқ', 'жиі', 'сондықтан да', 'біз', 'кейін', 'сол', 'соңғы', 'мүмкін', 'олай болса', 'айналасында', 'төмен', 'ішінде', 'болуы мүмкін', 'қаншалықты', 'бәрібір', 'соңында', 'дейін', 'сіз', 'осында',
+            'туралы', 'олардікі', 'әрдайым', 'қандай', 'қалайша', 'мен', 'бірге', 'осылай', 'оның', 'ал', 'болатын', 'әр', 'және', 'алыс', 'әрі', 'кез-келген', 'сондықтан', 'кейбіреулер', 'бұрын', 'неге', 'кейінірек', 'арнайы', 'басқа',
+            'байланысты', 'ертең', 'ғана', 'кеше', 'сіздің', 'сонда', 'кім', 'тек', 'әлдеқайда', 'жылы', 'тамаша', 'сирек', 'барлығы', 'бірақ', 'кезде', 'бастап', 'бұл', 'қай жерде', 'кезінде', 'үшін', 'ол', 'болып табылады', 'сондай',
+            'біздің', 'мұнда', 'менің', 'кейде', 'арқылы', 'болды', 'тағы', 'жылдың', 'сыртында', 'әрқашан', 'жақын', 'олардың', 'онда', 'сондай-ақ', 'қанша', 'біздікі', 'бәріміз', 'бүгін', 'ештеңе', 'көптеген']
+
 
 def tokinizer(sent):
   index=0
@@ -159,10 +169,11 @@ def group_items(lst):
     return lst
 
 class KazakhPhraseExtractor:
-    def __init__(self, text,  list_seq=list_seq_2,  cohision_filter=True, additional_text="1", f_raw_sc=9, f_req_sc=3):
+    def __init__(self, text, stop_words=stop_words, list_seq=list_seq_2,  cohision_filter=True, additional_text="1", f_raw_sc=9, f_req_sc=3):
         self.text = text
         self.cohision_filter=cohision_filter
         self.additional_text=additional_text
+        self.stop_words = stop_words
         self.f_req_sc=f_req_sc
         self.f_raw_sc=f_raw_sc
         self.list_seq=list_seq
@@ -170,6 +181,7 @@ class KazakhPhraseExtractor:
     def extract_phrases(self):  
         sent=tokinizer(self.text)
         mwe_list = filter_ngrams_by_pos_tag(sent, self.list_seq)
+      
 
         mwe_list_n = [tuple(i[0]) for i in mwe_list]
         candidates = []
@@ -231,5 +243,7 @@ class KazakhPhraseExtractor:
 
             cand=cand_mwe+cand_mwe1+cand_mwe2
             candidates = [i for i in cand if ((i[-1] not in punc_without) and (i[-1] not in string.punctuation))]
+            candidates = [i for i in  set(candidates) for w in self.stop_words if w not in i.split(" ")]
+          
 
         return candidates
