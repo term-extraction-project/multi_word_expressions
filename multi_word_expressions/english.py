@@ -62,6 +62,24 @@ def concatenate_ngrams(candidate):
   return str(temp)
 
 
+def filter_propn_noun(mwe_list,nlp):
+    filtred_ngrams=[]
+    for i in mwe_list:
+      checker2=True
+      if concatenate_ngrams(i[0])[-1] in punc_all and concatenate_ngrams(i[0])[0] in punc_all:
+         checker2=False
+
+      if len(i[2])>1:
+       if (("NOUN" in i[1][-1]) or ("PROPN" in i[1][-1]) or ("NOUN" in i[1][-2]) or ("PROPN" in i[1][-2])) and (("ADJ" not in i[1][-1]) and ("ADJ" not in i[1][-2])) :
+        temp_seq=str(concatenate_ngrams(i[0]))
+        temp_token=nlp(temp_seq)
+        if (temp_token[-1]).pos_ not in ["NOUN","PROPN","VERB"]:
+           checker2=False
+
+      if checker2==True:
+        filtred_ngrams.append(i)
+    return filtred_ngrams
+
 
 def filter_stop_words(mwe_list, stop_words):
     filtred_ngrams=[]
@@ -231,6 +249,7 @@ class EnglishPhraseExtractor:
 
         for sent in text_sent_tokens:
             temp_mwe_list = filter_ngrams_by_pos_tag(sent, self.list_seq)
+            temp_mwe_list = filter_propn_noun(temp_mwe_list,nlp)
             temp_mwe_list = filter_stop_words(temp_mwe_list, self.stop_words)
 
             sent_text=" ".join([s[0] for s in sent])
