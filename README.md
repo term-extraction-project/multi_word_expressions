@@ -8,6 +8,10 @@ You can install the package directly from GitHub using the following command:
 
 ```bash
 !git clone https://github.com/term-extraction-project/multi_word_expressions.git
+
+#path to file with extractor
+import sys
+sys.path.append('/content/multi_word_expressions/extractors')
 ```
 
 ### Usage
@@ -15,11 +19,6 @@ You can install the package directly from GitHub using the following command:
 Here is an example of how to use the Phrase Extractor for english from the package:
 
 ```bash
-#path to file with extractor
-import sys
-sys.path.append('/content/multi_word_expressions/extractors')
-
-# Language selection: English or Kazakh
 from english import EnglishPhraseExtractor
 
 # Your input text
