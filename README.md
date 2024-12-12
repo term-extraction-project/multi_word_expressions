@@ -40,6 +40,8 @@ print(candidates)
 Here is an example of how to use the Phrase Extractor for kazakh from the package:
 
 ```bash
+! pip install stanza # Устанавливаем библиотеку Stanza для обработки текста и NLP
+
 from kazakh import KazakhPhraseExtractor
 
 text = "Сіздің мәтініңіз қазақ тіліндегі."
