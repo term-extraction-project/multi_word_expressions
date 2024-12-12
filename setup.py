@@ -6,8 +6,8 @@ setup(
     description="A tool for extracting multi-word expressions for English and Kazakh.",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    author="Your Name",
-    author_email="your.email@example.com",
+    author="Aliya Kalykulova",
+    author_email="aliyakalykulova@mail.ru",
     url="https://github.com/term-extraction-project/multi_word_expressions",
     packages=find_packages(),
     install_requires=[],  # Укажите зависимости, если они есть
