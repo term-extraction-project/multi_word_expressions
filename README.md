@@ -2,12 +2,12 @@
 
 A Python package for extracting phrases from text.
 
-## Installation
+## Installation for Google Collab
 
 You can install the package directly from GitHub using the following command:
 
 ```bash
-pip install git+https://github.com/term-extraction-project/multi_word_expressions.git
+!git clone https://github.com/term-extraction-project/multi_word_expressions.git
 ```
 
 ### Usage
@@ -15,7 +15,12 @@ pip install git+https://github.com/term-extraction-project/multi_word_expression
 Here is an example of how to use the Phrase Extractor for english from the package:
 
 ```bash
-from multi_word_expressions.english import EnglishPhraseExtractor
+#path to file with extractor
+import sys
+sys.path.append('/content/multi_word_expressions/extractors')
+
+# Language selection: English or Kazakh
+from english import EnglishPhraseExtractor
 
 # Your input text
 text = "Your input text here."
@@ -36,7 +41,7 @@ print(candidates)
 Here is an example of how to use the Phrase Extractor for kazakh from the package:
 
 ```bash
-from multi_word_expressions.kazakh import KazakhPhraseExtractor
+from kazakh import KazakhPhraseExtractor
 
 text = "Сіздің мәтініңіз қазақ тіліндегі."
 additional_text="Міне, сіздің қосымша мәтініңіз."
