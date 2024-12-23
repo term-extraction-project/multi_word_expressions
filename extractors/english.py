@@ -294,7 +294,7 @@ class EnglishPhraseExtractor:
         # извлечение кандидатов из каждого предложения по отдельности
         for sent in text_sent_tokens:
             temp_mwe_list = filter_ngrams_by_pos_tag(sent, self.list_seq)  # извлечение на основе частей речи
-            temp_mwe_list = filter_propn_noun(temp_mwe_list,nlp)             #  фильтрация от изменяющихся частей речи
+            #  temp_mwe_list = filter_propn_noun(temp_mwe_list,nlp)             #  фильтрация от изменяющихся частей речи
             temp_mwe_list = filter_stop_words(temp_mwe_list, self.stop_words)   # фильтрация от стоп-слов
            
             # temp_mwe_list  содержит списки кандидатов с дополнительной информацией о них:
