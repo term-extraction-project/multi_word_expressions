@@ -21,7 +21,6 @@ pos_tag_patterns=[[["NOUN","ADJ","PROPN"],"*"],
                     [["NOUN","ADJ"],"*","ADP",["NOUN","ADJ"],"*","ADP",["NOUN","ADJ"],"*","ADP",["NOUN","ADJ"],"*"]]
 
 
-!python3 -m spacy download fr_core_news_sm
 from spacy.lang.fr.examples import sentences
 url = 'https://raw.githubusercontent.com/stopwords-iso/stopwords-fr/master/stopwords-fr.txt'
 stop_words = (requests.get(url).text).split("\n")
