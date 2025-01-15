@@ -11,6 +11,16 @@ from spacy.util import compile_infix_regex
 from operator import itemgetter
 import pandas as pd
 
+pos_tag_patterns=[[["NOUN","ADJ","PROPN"],"*"],
+                    [["NOUN","ADJ"],"*","ADP",["NOUN","ADJ"],"*"],
+                    [["NOUN","ADJ"],"*","ADP","DET",["NOUN","ADJ"],"*"],
+                    ["NOUN","VERB"],
+                    ["VERB","ADJ"],
+                    ["ADJ","VERB"],
+                    [["NOUN","ADJ"],"*","ADP",["NOUN","ADJ"],"*","ADP",["NOUN","ADJ"],"*"],
+                    [["NOUN","ADJ"],"*","ADP",["NOUN","ADJ"],"*","ADP",["NOUN","ADJ"],"*","ADP",["NOUN","ADJ"],"*"]]
+
+
 !python3 -m spacy download fr_core_news_sm
 from spacy.lang.fr.examples import sentences
 url = 'https://raw.githubusercontent.com/stopwords-iso/stopwords-fr/master/stopwords-fr.txt'
