@@ -220,7 +220,7 @@ def group_items(lst):
 # основное тело извлечения фраз
 # на вход текст и разные параметры
 # на выходе список фраз: ["phrase 1", "phrase 2", "phrase 3"]
-class FrancePhraseExtractor:
+class FrenchPhraseExtractor:
     def __init__(self, text, stop_words=stop_words, list_seq=pos_tag_patterns,  cohision_filter=True, additional_text="1", f_raw_sc=9, f_req_sc=3):
         self.text = text            # текст в оригинальном регистре
         self.cohision_filter=cohision_filter     #  Включить или отключить когезионный фильтр
