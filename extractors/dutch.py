@@ -20,7 +20,6 @@ pos_tag_patterns=[[["NOUN","ADJ","PROPN","SYM"],"*"],
                     ["VERB","NOUN"]]
 
 
-!python3 -m spacy download nl_core_news_sm
 from spacy.lang.nl.examples import sentences
 url = 'https://raw.githubusercontent.com/stopwords-iso/stopwords-nl/master/stopwords-nl.txt'
 stop_words = (requests.get(url).text).split("\n")
