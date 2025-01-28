@@ -249,14 +249,14 @@ def group_items(lst):
 # output list of phrases: ["phrase 1", "phrase 2", "phrase 3"]
 class EnglishPhraseExtractor:
     def __init__(self, text, stop_words=stop_words, list_seq=pos_tag_patterns,  cohision_filter=True, additional_text="1", f_raw_sc=9, f_req_sc=3):
-        self.text = text            # текст в оригинальном регистре
-        self.cohision_filter=cohision_filter     #  Включить или отключить когезионный фильтр
-        self.additional_text=additional_text   # если есть дополнительный текст, используется для вычисления частот, из него термины НЕ извлекаються
-        self.f_req_sc=f_req_sc     # порог выпрямленной частоты
-        self.f_raw_sc=f_raw_sc       # порог сырой частоты
-        self.stop_words=stop_words     # список стоп-сло
-        self.list_seq=list_seq         # список шаблонов частей речи
-        self.model_nlp = spacy.load("en_core_web_sm")     # модель Spacy
+        self.text = text            # text in original case
+        self.cohision_filter=cohision_filter     #  Enable or disable the cohesive filter
+        self.additional_text=additional_text   # if there is additional text, it is used to calculate frequencies, terms are NOT extracted from it
+        self.f_req_sc=f_req_sc     # rectified frequency threshold
+        self.f_raw_sc=f_raw_sc       # raw frequency threshold
+        self.stop_words=stop_words     # stop word list
+        self.list_seq=list_seq         # list of part of speech patterns
+        self.model_nlp = spacy.load("en_core_web_sm")     # Spacy model
 
      # Phrase Extraction 
     def extract_phrases(self):
