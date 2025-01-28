@@ -25,16 +25,16 @@ url = 'https://raw.githubusercontent.com/stopwords-iso/stopwords-nl/master/stopw
 stop_words = (requests.get(url).text).split("\n")
 
 
-# настройка списков пунктуаций для проверки, punc_without не содержит дефиса и апострофа ак как они могут быть в составе фраз.  punc_all необходим для проверки есть ли дефис в начале или в конце фразы
+# Setting up punctuation lists to check, punc_without does not contain hyphens and apostrophes as they can be part of phrases. punc_all is needed to check if there is a hyphen at the beginning or end of a phrase
 punc_without = list(string.punctuation)+["»","«"]
 punc_without.remove('-')
 punc_without.remove("'")
 punc_all=list(string.punctuation)+["»","«"]
 
-# Токенизатор текста, на вход текст с оригинальным регистром НЕ в нижнем регистре
-#  на выходе набор размеченных токенов по предложениям, элемент в списке - предложение, которое содержит токены с информацией о них
-#  [ [("token1", pos, index),("token2", pos, index),("token3", pos, index)],
-#    [("token1", pos, index),("token2", pos, index),("token3", pos, index)]]
+# Text tokenizer, input text with original case NOT in lowercase
+# output a set of tokens marked by sentences, an element in the list is a sentence that contains tokens with information about them
+# [ [("token1", pos, index),("token2", pos, index),("token3", pos, index)],
+# [("token1", pos, index),("token2", pos, index),("token3", pos, index)]]
 def tokinizer(text, nlp):
   sent_tokens = []
   index=0
@@ -42,17 +42,17 @@ def tokinizer(text, nlp):
   for sent in text_t.sents:
       list_tok=[]
       for i in sent:
-        list_tok.append((i.text.lower(), i.pos_,index))  # создание списка токенов с содержанием, собственно униграммы в нижнем регистре, его часть речи, номер позиции в тексте
+        list_tok.append((i.text.lower(), i.pos_,index))  # creating a list of tokens with content, the actual unigram in lower case, its part of speech, position number in the text
         index+=1
       sent_tokens.append(list_tok)
   return sent_tokens
 
 
 
-# функция объединения токенов фразы в единый string
-# на вход список слов ["word1","word2", "word3"]
-# на выходе  "word1 word2 word3"
-# пробел между дефисом и апострофом не ставится
+# function for combining phrase tokens into a single string
+# input is a list of words ["word1","word2", "word3"]
+# output is "word1 word2 word3"
+# no space is put between the hyphen and the apostrophe
 def concatenate_ngrams(candidate):
   cand_temp= []
   temp=''
@@ -68,10 +68,10 @@ def concatenate_ngrams(candidate):
   return str(temp)
 
 
-# Очистка фраз от стоп-слов,
-# если слово в фразе является стоп-словом, фраза удаляется. проверяются все слова в фразе кроме предлогов и PROPN
-# на входе список фраз и список стоп-слов
-# На выходе отфильтрированный список
+# Cleaning phrases from stop words,
+# if a word in a phrase is a stop word, the phrase is deleted. all words in the phrase are checked except prepositions and PROPN
+# at the input is a list of phrases and a list of stop words
+# at the output is a filtered list
 def filter_stop_words(mwe_list, stop_words):
     filtred_ngrams=[]
     for mwe in mwe_list:
@@ -91,11 +91,11 @@ def filter_stop_words(mwe_list, stop_words):
 
 
 
-# извлечение кандидатов на основе шаблонов частей речи
-# на вход список токенов в одном предложении [("token1", pos, index),("token2", pos, index),("token3", pos, index)] и  шаблон частей речи
-# на выходе список извлеченных кандидатов с информацией о них:
-# [[список слов фразы], шаблон по которому был извлечен кандидат, последовательность частей речи канддата, индексы позиций слов,количество слов, количество символов в кандидате ]
-def filter_ngrams_by_pos_tag(sentence, sequense):
+# extracting candidates based on part-of-speech templates
+# input: list of tokens in one sentence [("token1", pos, index),("token2", pos, index),("token3", pos, index)] and part-of-speech template
+# output: list of extracted candidates with information about them:
+# [[list of words in the phrase], template by which the candidate was extracted, sequence of parts of speech of the candidate, indexes of word positions, number of words, number of characters in the candidate]
+  def filter_ngrams_by_pos_tag(sentence, sequense):
     filtered_ngrams=[]
     t=0
     for seq in sequense:
@@ -147,17 +147,17 @@ def filter_ngrams_by_pos_tag(sentence, sequense):
 
                    else:
                       checker=False
-               #
+               
                if seq_index==len(seq) and (len(temp)>1  or "-" in "".join(temp)) and len(set("".join(temp)).intersection(set(punc_without)-set("-'")))==0:
                     if [temp, seq, temp_pos, temp_index,len(temp)] not in filtered_ngrams and temp[-1] not in punc_without:
                          temp=[word.lower() for word in temp]
                          filtered_ngrams.append([temp, seq, temp_pos, temp_index,len(temp),len(concatenate_ngrams(temp))])
     return  filtered_ngrams
 
-# расчет выпрямленной частоты - количество фразы в тексте, не в составе фраз длинее
-# на вход: список слов фразы(одного кандидата), все тексты в виде единого string, список f_raw_req_list в котором содержатся частоты фраз длинее/или он пуст, так как заполняется в процессе вызова функции
-# на выходе : выпрямленная частота фразы
-# функция вызывается столько же раз сколько и кандидатов. для расчета выпрямленной частоты, расчет производится от самой длинной до самой короткой фразы, так как для ее расчет необходимо знать частоту фраз длинее целевой
+# calculation of the rectified frequency - the number of phrases in the text, not in phrases longer than
+# input: list of words of the phrase (one candidate), all texts in the form of a single string, list f_raw_req_list which contains the frequencies of phrases longer than/or it is empty, since it is filled in during the function call
+# output: rectified frequency of the phrase
+# the function is called as many times as candidates. to calculate the rectified frequency, the calculation is made from the longest to the shortest phrase, since for its calculation it is necessary to know the frequency of phrases longer than the target
 def f_req_calc(mwe, all_txt, f_raw_req_list):
   temp=all_txt
   mwe_c=concatenate_ngrams(mwe)
@@ -168,7 +168,7 @@ def f_req_calc(mwe, all_txt, f_raw_req_list):
   f=temp.count(mwe_c)
   return f
 
-#
+# Grouping candidates by common word positions
 class UnionFind:
     def __init__(self, size):
         self.parent = list(range(size))
@@ -214,27 +214,26 @@ def group_items(lst):
     return lst
 
 
-# основное тело извлечения фраз
-# на вход текст и разные параметры
-# на выходе список фраз: ["phrase 1", "phrase 2", "phrase 3"]
+# main body of phrase extraction
+# input text and various parameters
+# output list of phrases: ["phrase 1", "phrase 2", "phrase 3"]
 class DutchPhraseExtractor:
     def __init__(self, text, stop_words=stop_words, list_seq=pos_tag_patterns,  cohision_filter=True, additional_text="1", f_raw_sc=9, f_req_sc=3):
-        self.text = text            # текст в оригинальном регистре
-        self.cohision_filter=cohision_filter     #  Включить или отключить когезионный фильтр
-        self.additional_text=additional_text   # если есть дополнительный текст, используется для вычисления частот, из него термины НЕ извлекаються
-        self.f_req_sc=f_req_sc     # порог выпрямленной частоты
-        self.f_raw_sc=f_raw_sc       # порог сырой частоты
-        self.stop_words=stop_words     # список стоп-сло
-        self.list_seq=list_seq         # список шаблонов частей речи
-        self.model_nlp  = spacy.load("nl_core_news_sm")# модель Spacy
+        self.text = text            # text in original case
+        self.cohision_filter=cohision_filter     #  Enable or disable the cohesive filter
+        self.additional_text=additional_text   # if there is additional text, it is used to calculate frequencies, terms are NOT extracted from it
+        self.f_req_sc=f_req_sc     # rectified frequency threshold
+        self.f_raw_sc=f_raw_sc       # raw frequency threshold
+        self.stop_words=stop_words     # stop word list
+        self.list_seq=list_seq         # list of part of speech patterns
+        self.model_nlp  = spacy.load("nl_core_news_sm")  # Spacy model
 
-     # Извлечение фраз
+     #Spacy model
     def extract_phrases(self):
 
-        # Изменение токенизатора , чтобы не разделял слова с дефисом.
-        # IT-developers create innovative solutions.  --> ["IT-developers","create","innovative","solutions","."]
-        # Вместо ["IT","-","developers"] токенизируется как цельный токен "IT-developers", это помогает избежать извлечения униграм которые находятся в  составе слова, что уменьшает шум
-
+        # Change the tokenizer so that it does not separate words with hyphens.
+        # IT-developers create innovative solutions. --> ["IT-developers","create","innovative","solutions","."]
+        # Instead of ["IT","-","developers"] tokenized as a whole token "IT-developers", this helps to avoid extracting unigrams that are part of the word, which reduces noise
 
         nlp = self.model_nlp
 
@@ -254,73 +253,71 @@ class DutchPhraseExtractor:
         nlp.tokenizer.infix_finditer = infix_re.finditer
 
 
-        # удаление лишних пробелов
+        # removing extra spaces
         text=self.text.replace(" -","-").replace("- ","-").replace(" '","'").replace("  "," ")
 
-        #   токенизация текста, растановка частей речи и индекса позиций
+        #   text tokenization, parts of speech and position index
         text_sent_tokens = tokinizer(text, nlp)
         mwe_list = []
 
-        # извлечение кандидатов из каждого предложения по отдельности
+        # extracting candidates from each sentence separately
         for sent in text_sent_tokens:
-            temp_mwe_list = filter_ngrams_by_pos_tag(sent, self.list_seq)  # извлечение на основе частей речи
-            temp_mwe_list = filter_stop_words(temp_mwe_list, self.stop_words)   # фильтрация от стоп-слов
+            temp_mwe_list = filter_ngrams_by_pos_tag(sent, self.list_seq)  # Part-of-speech extraction
+            temp_mwe_list = filter_stop_words(temp_mwe_list, self.stop_words)   # stop word filtering
 
-            # temp_mwe_list  содержит списки кандидатов с дополнительной информацией о них:
-            # [[список слов фразы], шаблон по которому был извлечен кандидат, последовательность частей речи канддата, индексы позиций слов,количество слов, количество символов в кандидате ]
-
+            # temp_mwe_list contains lists of candidates with additional information about them:
+            # [[list of words of the phrase], the template by which the candidate was extracted, the sequence of parts of speech of the candidate, the indices of the positions of words, the number of words, the number of characters in the candidate]
             sent_text=" ".join([s[0] for s in sent])
             temp_mwe_list=[mwe+[sent_text] for mwe in temp_mwe_list]
             mwe_list += temp_mwe_list
 
-        # создание списка кандидатов содержащий только слова кандидатов: [("phrase","one"),("mwe","next"),("phrase","other")]
+        # creating a list of candidates containing only the words of the candidates: [("phrase","one"),("mwe","next"),("phrase","other")]
         mwe_list_n = [tuple(i[0]) for i in mwe_list]
         candidates = []
         term_mws=[]
         words_scores=[]
         candid_word=[]
 
-       # объединение слов фразы:  ["phrase one", "mwe next","phrase other"]
+       # combination of words of a phrase: ["phrase one", "mwe next","phrase other"]
         for i in set(mwe_list_n):
             candidates.append(concatenate_ngrams(i))
 
-       # очистка фраз от пунктуации и если полностью состоит из пунктуации и цифр
+       # cleaning phrases from punctuation and if it consists entirely of punctuation and numbers
         candidates = [i for i in candidates if ((i[-1] not in punc_without) and (i[-1] not in string.punctuation))]
         candidates = [i for i in candidates if len(set('1234567890').intersection(set(i))) == 0]
 
-        #текст для когезионного фильтра
+        # text for cohesive filter
         all_txt=''
-        if len(self.additional_text)>10:  # если есть текст (цифра 10 рандомная, главное чтобы не пустой)  то объединяем с текстом из которого извлекаличь кандилаты
+        if len(self.additional_text)>10:  # if there is text (number 10 is random, the main thing is that it is not empty) then we combine it with the text from which we extracted candidates
              text_ref=self.additional_text.replace(" -","-").replace("- ","-").replace(" '","'").replace("  "," ").lower()
              all_txt=self.text+". "+text_ref
         else:
              all_txt=self.text
         all_txt=all_txt.lower()
 
-        # если когезионный фильтр включен
+        # if the cohesive filter is on
         if  self.cohision_filter==True:
             f_raw_req_list=[]
             all_cand_r=[tuple(i[0]) for i in mwe_list]
-            possible_mwe=sorted(set(all_cand_r), key=len, reverse=True)    # сортировка фраз от самой длинной к самой короткой
+            possible_mwe=sorted(set(all_cand_r), key=len, reverse=True)    # sort phrases from longest to shortest
 
             for mwe in possible_mwe:
-                f_raw=all_txt.count(concatenate_ngrams(mwe))    # вычисление сырой частоты
-                f_req=f_req_calc(mwe,all_txt, f_raw_req_list)    # расчет выпрямленной частоты
-                f_raw_req_list.append([mwe,f_raw,f_req])          # добавление в список информации о фразе и ее частоте
+                f_raw=all_txt.count(concatenate_ngrams(mwe))    # raw frequency calculation
+                f_req=f_req_calc(mwe,all_txt, f_raw_req_list)    # rectified frequency calculation
+                f_raw_req_list.append([mwe,f_raw,f_req])          # adding information about a phrase and its frequency to the list
 
             mwe_f=[]
             f_raw_req_list_ind=[concatenate_ngrams(i[0]) for i in f_raw_req_list]
 
-            # Объединение списоков частоты фразы и информации о фразе
+            # Merging Phrase Frequency and Phrase Info Lists
             for mwe in mwe_list:
                 k=f_raw_req_list_ind.index(concatenate_ngrams(mwe[0]))
                 mwe_f.append([mwe[0],f_raw_req_list[k][1], f_raw_req_list[k][2],mwe[3], mwe[-1]])
 
-            # группирование фраз по общей позиции слов
-           # на вход : [кандидат,сырая частота, выпремленная частота, индексы позиций слов, предложение в котором находится])
-           # на выходе сгруппированные фразы по позициям(вконце указан номер группы, к которой принадлежит фраза):
-          # [кандидат,сырая частота, выпремленная частота, индексы позиций слов, предложение в котором находится, номер группы ])
-
+            # grouping phrases by common word position
+            # input: [candidate, raw frequency, straightened frequency, word position indices, sentence in which it is located])
+            # output: phrases grouped by position (at the end, the number of the group to which the phrase belongs is indicated):
+            # [candidate, raw frequency, straightened frequency, word position indices, sentence in which it is located, group number])
             grouped_data = group_items(mwe_f)
 
             candidates=[]
@@ -328,7 +325,7 @@ class DutchPhraseExtractor:
             remover=[]
             df=pd.DataFrame(grouped_data, columns=["mwe","f raw","f req","index","sent","group"])
 
-             # выбор кандидата из группы с наибольшей выпрямленной или сырой частотой
+             # selecting a candidate from the group with the highest rectified or raw frequency
             for i in range(1,len(set(df["group"]))+1):
                 df_temp=df[df['group'] == i]
                 while len(df_temp)>0:
@@ -345,11 +342,11 @@ class DutchPhraseExtractor:
                       df_temp=df_temp[~df_temp.index.isin(drop+index)]
                       remover+=dd
 
-            # либо фраз принимаются если имеют выпрямленную или сырую частоту выше указанного порога
+            # or phrases are accepted if they have a rectified or raw frequency above the specified threshold
             data1=df[df["f req"]>=self.f_req_sc].values.tolist()
             data2=df[df["f raw"]>=self.f_raw_sc].values.tolist()
 
-            # объединение слов фразы и создание единого списка извлеченных фраз: ["phrase 1","phrase 2","phrase3"]
+            # combine words of a phrase and create a single list of extracted phrases: ["phrase 1","phrase 2","phrase3"]
             cand_mwe=[concatenate_ngrams(i[0]) for i in candidates+candid_q]
             cand_mwe1=[concatenate_ngrams(i[0]) for i in data1]
             cand_mwe2=[concatenate_ngrams(i[0]) for i in data2]
