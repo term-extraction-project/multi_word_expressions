@@ -95,7 +95,8 @@ def filter_stop_words(mwe_list, stop_words):
 # input: list of tokens in one sentence [("token1", pos, index),("token2", pos, index),("token3", pos, index)] and part-of-speech template
 # output: list of extracted candidates with information about them:
 # [[list of words in the phrase], template by which the candidate was extracted, sequence of parts of speech of the candidate, indexes of word positions, number of words, number of characters in the candidate]
-  def filter_ngrams_by_pos_tag(sentence, sequense):
+
+def filter_ngrams_by_pos_tag(sentence, sequense):
     filtered_ngrams=[]
     t=0
     for seq in sequense:
