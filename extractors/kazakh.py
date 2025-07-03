@@ -242,7 +242,7 @@ class KazakhPhraseExtractor:
 
             cand=cand_mwe+cand_mwe1+cand_mwe2
             candidates = [i for i in cand if ((i[-1] not in punc_without) and (i[-1] not in string.punctuation))]
-            candidates = [i for i in  set(candidates) for w in self.stop_words if w not in i.split(" ")]
+            #candidates = [i for i in  set(candidates) for w in self.stop_words if w not in i.split(" ")]
           
 
         return candidates
