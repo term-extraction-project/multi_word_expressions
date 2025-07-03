@@ -179,17 +179,20 @@ class KazakhPhraseExtractor:
 
     def extract_phrases(self):  
         sent=tokinizer(self.text)
+        print(0)
         mwe_list = filter_ngrams_by_pos_tag(sent, self.list_seq)
+        print(1)
       
 
         mwe_list_n = [tuple(i[0]) for i in mwe_list]
+        print(2)
         candidates = []
         for i in set(mwe_list_n):
             candidates.append(concatenate_ngrams(i))
 
         candidates = [i for i in candidates if ((i[-1] not in punc_without) and (i[-1] not in string.punctuation))]
         candidates = [i for i in candidates if len(set('1234567890').intersection(set(i))) == 0]
-
+        print(3)
         #text for cohision filter and calculate frequency
         all_txt=(self.additional_text).lower()
 
@@ -212,7 +215,7 @@ class KazakhPhraseExtractor:
                 k=f_raw_req_list_ind.index(concatenate_ngrams(mwe[6]))
                 mwe_f.append([mwe[0],f_raw_req_list[k][1], f_raw_req_list[k][2],mwe[3]])
 
-
+            print(4)
             grouped_data = group_items(mwe_f)
 
             candidates=[]
@@ -232,14 +235,14 @@ class KazakhPhraseExtractor:
                       dd=df_temp.loc[drop].values.tolist()
                       df_temp=df_temp[~df_temp.index.isin(drop+index)]
                       remover+=dd
-
+            print(5)
             data1=df[df["f req"]>=self.f_req_sc].values.tolist()
             data2=df[df["f raw"]>=self.f_raw_sc].values.tolist()
 
             cand_mwe=[concatenate_ngrams(i[0]) for i in candidates]
             cand_mwe1=[concatenate_ngrams(i[0]) for i in data1]
             cand_mwe2=[concatenate_ngrams(i[0]) for i in data2]
-
+            print(6)
             cand=cand_mwe+cand_mwe1+cand_mwe2
             candidates = [i for i in cand if ((i[-1] not in punc_without) and (i[-1] not in string.punctuation))]
             #candidates = [i for i in  set(candidates) for w in self.stop_words if w not in i.split(" ")]
